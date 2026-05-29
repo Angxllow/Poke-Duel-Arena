@@ -1,6 +1,6 @@
 .deck-builder-layout {
   display: flex;
-  gap: 2rem;
+  gap: 3rem;
   height: calc(100vh - 120px);
 }
 
@@ -43,9 +43,9 @@
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: 1.5rem;
+  gap: 2.5rem;
   justify-items: center;
-  padding: 10px 0;
+  padding: 20px 0;
 }
 
 .card-wrapper {

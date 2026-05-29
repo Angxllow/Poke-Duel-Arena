@@ -22,7 +22,7 @@
 
 .hand-card-wrapper {
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  margin-left: -50px;
+  margin-left: -35px;
   position: relative;
   transform-origin: bottom center;
   /* subtle default rotation and translation will be applied via nth-child below, or dynamically via TS. For CSS, we do a basic fan */
