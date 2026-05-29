@@ -1,0 +1,90 @@
+<div class="game-wrapper" *ngIf="gameState">
+  
+  <div class="left-sidebar">
+    <app-player-panel 
+      *ngIf="opponentPlayer"
+      [username]="opponentPlayer.username"
+      [lifePoints]="opponentPlayer.lifePoints"
+      [deckCount]="opponentPlayer.deck.length"
+      [discardCount]="opponentPlayer.discardPile.length"
+      [isOpponent]="true"
+      [isActiveTurn]="gameState.currentTurnPlayerId === opponentPlayerId">
+    </app-player-panel>
+    
+    <div class="action-log-wrapper">
+      <app-action-log [logs]="gameState.actionLog"></app-action-log>
+    </div>
+    
+    <app-player-panel 
+      *ngIf="myPlayer"
+      [username]="myPlayer.username"
+      [lifePoints]="myPlayer.lifePoints"
+      [deckCount]="myPlayer.deck.length"
+      [discardCount]="myPlayer.discardPile.length"
+      [isOpponent]="false"
+      [isActiveTurn]="gameState.currentTurnPlayerId === myPlayerId">
+    </app-player-panel>
+  </div>
+
+  <div class="center-area">
+    <div class="opponent-hand-area" *ngIf="opponentPlayer">
+      <app-hand [cards]="opponentPlayer.hand" [isOpponent]="true"></app-hand>
+    </div>
+    
+    <div class="battlefield-area">
+      <app-battlefield 
+        *ngIf="myPlayer && opponentPlayer"
+        [playerField]="myPlayer.field"
+        [opponentField]="opponentPlayer.field"
+        [isPlayerTurn]="isMyTurn"
+        [phase]="gameState.phase"
+        (playerCardClick)="onPlayerCardClick($event)"
+        (opponentCardClick)="onOpponentCardClick($event)"
+        (opponentDirectAttack)="onOpponentDirectAttack()"
+        (playerAbilityClick)="onPlayerAbilityClick($event)">
+      </app-battlefield>
+    </div>
+    
+    <div class="player-hand-area" *ngIf="myPlayer">
+      <app-hand 
+        [cards]="myPlayer.hand" 
+        [isOpponent]="false"
+        [isActiveTurn]="isMyTurn && gameState.phase === 'MAIN'"
+        (cardSelect)="onHandCardSelect($event)">
+      </app-hand>
+    </div>
+  </div>
+
+  <div class="right-sidebar">
+    <app-turn-indicator 
+      [currentPhase]="gameState.phase"
+      [isPlayerTurn]="isMyTurn"
+      [turnNumber]="gameState.turnNumber"
+      (nextPhase)="onNextPhase()">
+    </app-turn-indicator>
+
+    <div class="context-actions mt-3">
+      <button class="btn btn-warning w-100 mb-2" 
+              *ngIf="isMyTurn && gameState.phase === 'DRAW'" 
+              (click)="drawCard()">
+        Robar Carta
+      </button>
+
+      <div class="instructions-box p-3 glass-panel text-sm text-muted">
+        <h5 class="text-white mb-2">Instrucciones Online:</h5>
+        <ul style="padding-left: 20px; font-size: 0.8rem;">
+          <li *ngIf="!isMyTurn">Espera el turno de tu oponente...</li>
+          <li *ngIf="isMyTurn && gameState.phase === 'DRAW'">Haz clic en "Robar Carta".</li>
+          <li *ngIf="isMyTurn && gameState.phase === 'MAIN'">Invoca una carta de tu mano o defiende con una en campo.</li>
+          <li *ngIf="isMyTurn && gameState.phase === 'BATTLE'">Ataca seleccionando tu carta y luego el objetivo.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container text-center mt-5" *ngIf="errorMessage || !gameState">
+  <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+  <div *ngIf="!errorMessage && !gameState">Sincronizando estado de la partida...</div>
+  <a routerLink="/online-lobby" class="btn btn-primary mt-3">Volver al Lobby</a>
+</div>

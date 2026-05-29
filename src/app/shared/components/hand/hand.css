@@ -1,0 +1,31 @@
+.hand-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  min-height: 150px;
+}
+
+.hand-cards {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.hand-card-wrapper {
+  transition: transform 0.2s;
+  margin-left: 0;
+}
+
+.hand-card-wrapper:first-child {
+  margin-left: 0;
+}
+
+.hand-card-wrapper.selectable:hover {
+  transform: translateY(-20px);
+  z-index: 10;
+}
+
+.opponent-hand .hand-card-wrapper {
+  margin-left: 0;
+}

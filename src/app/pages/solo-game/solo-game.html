@@ -1,0 +1,248 @@
+@if (!gameStarted) {
+  <section class="pre-game-lobby container mt-5">
+    <div class="glass-panel mx-auto text-center" style="max-width: 800px;">
+      <h1 class="mb-4 text-white">Jugar contra Computadora</h1>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger error-message">{{ errorMessage }}</div>
+      }
+
+      @if (successMessage) {
+        <div class="alert alert-success success-message">{{ successMessage }}</div>
+      }
+
+      <h2 class="text-white mt-4">Tus Mazos Disponibles</h2>
+
+      @if (loadingDecks) {
+        <p class="text-muted">Cargando mazos...</p>
+      } @else if (availableDecks.length > 0) {
+        <div class="deck-grid d-flex flex-wrap justify-content-center gap-3 my-4">
+          @for (deck of availableDecks; track deck.id) {
+            <article
+              class="deck-option p-3 glass-panel"
+              [class.border-primary]="selectedDeck?.id === deck.id"
+              [style.border]="selectedDeck?.id === deck.id ? '2px solid var(--primary)' : '1px solid transparent'"
+              style="cursor: pointer; min-width: 200px;"
+              (click)="selectDeck(deck)"
+            >
+              <h3 class="text-white">{{ deck.name }}</h3>
+              <p class="text-muted mb-0">{{ deck.cards.length }} cartas</p>
+              <p [class.text-success]="deck.cards.length >= 20" [class.text-warning]="deck.cards.length < 20">
+                {{ deck.cards.length >= 20 ? 'Listo para jugar' : 'Mazo incompleto' }}
+              </p>
+            </article>
+          }
+        </div>
+      } @else {
+        <p class="text-muted my-4">No tienes mazos disponibles. Puedes generar un mazo rápido.</p>
+      }
+
+      <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
+        <button type="button" class="btn btn-outline" (click)="generateQuickDeck()" [disabled]="generatingDeck">
+          {{ generatingDeck ? 'Generando mazo rápido...' : 'Generar Mazo Rápido' }}
+        </button>
+
+        <button type="button" class="btn btn-secondary" routerLink="/deck-builder">
+          Ir al Constructor de Mazos
+        </button>
+
+        <button type="button" class="btn btn-primary btn-lg" (click)="startGame()" [disabled]="startingGame">
+          {{ startingGame ? 'Iniciando partida...' : 'Iniciar Partida' }}
+        </button>
+      </div>
+    </div>
+  </section>
+}
+
+@if (gameStarted && gameState) {
+  <div class="solo-game-screen position-relative">
+    
+    @if (gameState.status === 'FINISHED') {
+      <div class="game-over-panel p-5 glass-panel text-center position-absolute top-50 start-50 translate-middle" style="z-index: 1000; width: 400px; max-width: 90vw;">
+        <h2 class="text-white mb-3">Partida finalizada</h2>
+        <p class="fs-4 text-warning fw-bold">Ganador: {{ getWinnerName() }}</p>
+        <p class="text-white">Turnos jugados: {{ gameState.turnNumber }}</p>
+        <div class="d-flex flex-column gap-2 mt-4">
+          <button type="button" class="btn btn-primary" (click)="startNewGame()">Nueva partida</button>
+          <button type="button" class="btn btn-secondary" routerLink="/history">Ver historial</button>
+        </div>
+      </div>
+    }
+    <div class="left-panel">
+      <app-player-panel 
+        [username]="gameState.player2.username"
+        [lifePoints]="gameState.player2.lifePoints"
+        [deckCount]="gameState.player2.deck.length"
+        [discardCount]="gameState.player2.discardPile.length"
+        [isOpponent]="true"
+        [isActiveTurn]="gameState.currentTurnPlayerId === 'computer'">
+      </app-player-panel>
+      
+      <div class="battle-log">
+        <app-action-log [logs]="gameState.actionLog"></app-action-log>
+      </div>
+      
+      <app-player-panel 
+        [username]="gameState.player1.username"
+        [lifePoints]="gameState.player1.lifePoints"
+        [deckCount]="gameState.player1.deck.length"
+        [discardCount]="gameState.player1.discardPile.length"
+        [isOpponent]="false"
+        [isActiveTurn]="gameState.currentTurnPlayerId === 'player'">
+      </app-player-panel>
+    </div>
+
+    <div class="battle-area">
+      <div class="opponent-hand">
+        <app-hand [cards]="gameState.player2.hand" [isOpponent]="true"></app-hand>
+      </div>
+      
+      <div class="field-zone">
+        <app-battlefield 
+          [playerField]="gameState.player1.field"
+          [opponentField]="gameState.player2.field"
+          [isPlayerTurn]="isPlayerTurn"
+          [phase]="gameState.phase"
+          [selectedDefenseCardId]="selectedDefenseCard?.instanceId"
+          [selectedAbilityCardId]="selectedAbilityCard?.instanceId"
+          [selectedAttackerId]="selectedAttackerCard?.instanceId"
+          [selectedTargetId]="selectedTargetCard?.instanceId"
+          [selectedAbilityTargetId]="selectedAbilityTarget?.instanceId"
+          (playerCardClick)="onPlayerCardClick($event)"
+          (opponentCardClick)="onOpponentCardClick($event)"
+          (opponentDirectAttack)="onOpponentDirectAttack()"
+          (playerAbilityClick)="onPlayerAbilityClick($event)">
+        </app-battlefield>
+      </div>
+      
+      <div class="player-hand">
+        <app-hand 
+          [cards]="gameState.player1.hand" 
+          [isOpponent]="false"
+          [isActiveTurn]="isPlayerTurn && gameState.phase === 'MAIN'"
+          [selectedCardId]="selectedHandCard?.instanceId"
+          (cardSelect)="onHandCardSelect($event)">
+        </app-hand>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <app-turn-indicator 
+        [currentPhase]="gameState.phase"
+        [isPlayerTurn]="isPlayerTurn"
+        [turnNumber]="gameState.turnNumber"
+        (nextPhase)="onNextPhase()">
+      </app-turn-indicator>
+
+        <div class="context-actions mt-3 text-center">
+        <!-- Not active state -->
+        <div *ngIf="gameState.status === 'FINISHED'" class="p-3 glass-panel text-danger fw-bold">
+          Partida finalizada
+        </div>
+
+        <!-- Not player's turn -->
+        <div *ngIf="!isPlayerTurn && gameState.status === 'ACTIVE'" class="p-3 glass-panel text-warning fw-bold">
+          <i class="bi bi-hourglass-split"></i> Turno de la computadora...
+        </div>
+
+        <!-- DRAW PHASE -->
+        <button class="btn btn-warning w-100 mb-2" 
+                *ngIf="isPlayerTurn && gameState.phase === 'DRAW'"
+                [disabled]="computerThinking" 
+                (click)="drawCard()">
+          Robar Carta
+        </button>
+
+        <!-- MAIN PHASE -->
+        <div *ngIf="isPlayerTurn && gameState.phase === 'MAIN'" class="d-flex flex-column gap-2">
+          <button class="btn btn-primary w-100" 
+                  [disabled]="!selectedHandCard || gameState.player1.hasSummonedThisTurn || computerThinking" 
+                  (click)="summonSelectedCard()">
+            Invocar carta
+          </button>
+          
+          <button class="btn btn-info w-100" 
+                  [disabled]="!selectedDefenseCard || computerThinking" 
+                  (click)="defendWithSelectedCard()">
+            Defender
+          </button>
+
+          <button class="btn btn-success w-100" 
+                  [disabled]="!isPlayerTurn || (!selectedAttackerCard && !selectedDefenseCard && !selectedAbilityCard) || computerThinking" 
+                  (click)="startAbilityMode()">
+            Preparar habilidad
+          </button>
+
+          <button class="btn btn-success w-100" 
+                  [disabled]="!isPlayerTurn || !selectedAbilityCard || computerThinking" 
+                  (click)="activateSelectedAbility()">
+            Usar habilidad
+          </button>
+
+          <button class="btn btn-secondary w-100 mt-2 border-light"
+                  [disabled]="computerThinking" 
+                  (click)="endCurrentPhase()">
+            Terminar fase
+          </button>
+        </div>
+
+        <!-- BATTLE PHASE -->
+        <div *ngIf="isPlayerTurn && gameState.phase === 'BATTLE'" class="d-flex flex-column gap-2">
+          <button class="btn btn-danger w-100" 
+                  [disabled]="!selectedAttackerCard || !selectedTargetCard || computerThinking" 
+                  (click)="attackSelectedTarget()">
+            Atacar objetivo
+          </button>
+
+          <button class="btn btn-danger w-100" 
+                  [disabled]="!selectedAttackerCard || opponentHasCards() || computerThinking" 
+                  (click)="attackDirectly()">
+            Atacar directo
+          </button>
+
+          <button class="btn btn-success w-100"
+                  [disabled]="!isPlayerTurn || (!selectedAttackerCard && !selectedAbilityCard) || computerThinking"
+                  (click)="startAbilityMode()">
+            Preparar habilidad
+          </button>
+
+          <button class="btn btn-success w-100"
+                  [disabled]="!isPlayerTurn || !selectedAbilityCard || computerThinking"
+                  (click)="activateSelectedAbility()">
+            Usar habilidad
+          </button>
+
+          <button class="btn btn-secondary w-100 mt-2 border-light"
+                  [disabled]="computerThinking" 
+                  (click)="endCurrentPhase()">
+            Terminar fase
+          </button>
+        </div>
+
+        <!-- END PHASE -->
+        <div *ngIf="isPlayerTurn && gameState.phase === 'END'" class="d-flex flex-column gap-2">
+          <button class="btn btn-warning w-100 border-dark text-dark fw-bold"
+                  [disabled]="computerThinking" 
+                  (click)="endPlayerTurn()">
+            Terminar Turno
+          </button>
+        </div>
+
+        <!-- Dynamic Instructions -->
+        <div class="instructions-box p-3 mt-3 glass-panel text-sm text-start" *ngIf="isPlayerTurn">
+          <h5 class="text-white mb-2" style="font-size: 0.9rem;">Instrucciones:</h5>
+          <ul class="text-info m-0" style="padding-left: 20px; font-size: 0.8rem;">
+            <li *ngIf="gameState.phase === 'DRAW'">Haz clic en "Robar Carta".</li>
+            <li *ngIf="gameState.phase === 'MAIN' && !selectedHandCard && !selectedDefenseCard && !selectedAbilityCard">Selecciona una carta de tu mano para invocarla, o de tu campo para defender/habilidad.</li>
+            <li *ngIf="gameState.phase === 'MAIN' && selectedHandCard">Carta en mano seleccionada. Toca "Invocar carta".</li>
+            <li *ngIf="gameState.phase === 'MAIN' && (selectedDefenseCard || selectedAbilityCard)">Carta en campo seleccionada. Elige Defender o Usar habilidad.</li>
+            <li *ngIf="gameState.phase === 'MAIN' && selectedAbilityCard && !selectedAbilityTarget">Si la habilidad requiere objetivo, selecciona una carta rival.</li>
+            <li *ngIf="gameState.phase === 'BATTLE' && !selectedAttackerCard">Selecciona una carta de tu campo para atacar.</li>
+            <li *ngIf="gameState.phase === 'BATTLE' && selectedAttackerCard && opponentHasCards() && !selectedTargetCard">Selecciona una carta rival como objetivo.</li>
+            <li *ngIf="gameState.phase === 'BATTLE' && selectedAttackerCard && !opponentHasCards()">El rival no tiene cartas, puedes atacar directo.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,16 @@
+<div class="hand-container" [class.opponent-hand]="isOpponent">
+  <div class="hand-cards">
+    <div *ngFor="let card of cards; let i = index" 
+         class="hand-card-wrapper" 
+         [class.selectable]="!isOpponent && isActiveTurn"
+         [class.selected]="selectedCardId === card.instanceId"
+         style="transition: all 0.2s;">
+      <app-pokemon-card 
+        [card]="card" 
+        mode="battle" 
+        [isFaceDown]="isOpponent"
+        (click)="onCardClick(card)">
+      </app-pokemon-card>
+    </div>
+  </div>
+</div>

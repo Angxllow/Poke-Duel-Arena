@@ -1,0 +1,33 @@
+.trophy-icon {
+  font-size: 5rem;
+  text-shadow: 0 0 20px rgba(255, 222, 0, 0.6);
+  animation: bounce 2s infinite ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.stats-box {
+  background: rgba(0,0,0,0.3);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+}
+
+.text-start { text-align: left; }
+.text-success { color: var(--success); }
+.my-4 { margin-top: 2rem; margin-bottom: 2rem; }
+.gap-3 { gap: 1rem; }
+.justify-content-center { justify-content: center; }

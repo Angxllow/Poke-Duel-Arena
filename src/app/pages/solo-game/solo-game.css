@@ -1,0 +1,77 @@
+.solo-game-screen {
+  height: calc(100vh - 72px);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 300px minmax(820px, 1fr) 300px;
+  gap: 16px;
+  background: radial-gradient(circle at center, rgba(30, 40, 80, 0.8), var(--bg-darker));
+  color: white;
+  padding: 14px;
+}
+
+.left-panel,
+.right-panel {
+  height: calc(100vh - 100px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.battle-log {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.battle-area {
+  height: calc(100vh - 100px);
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 165px 1fr 170px;
+  align-items: center;
+}
+
+.opponent-hand,
+.player-hand {
+  min-height: 155px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+.field-zone {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 430px;
+  width: 100%;
+}
+
+.player-field,
+.opponent-field {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  min-height: 150px;
+  width: 100%;
+}
+
+.pokemon-card {
+  width: 120px;
+  min-width: 120px;
+  height: 170px;
+}
+
+/* Base utility classes */
+.w-100 { width: 100%; }
+.text-sm { font-size: 0.85rem; }

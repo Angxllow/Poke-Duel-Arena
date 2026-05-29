@@ -1,0 +1,112 @@
+<div class="container mt-4 mb-4">
+  <div class="deck-builder-layout">
+    
+    <!-- Left Column: Available Cards -->
+    <div class="available-cards-section glass-panel">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-secondary m-0">Cartas Disponibles</h2>
+        <div class="text-muted" style="font-size: 0.9rem;">
+          {{ filteredCards.length }} resultados
+        </div>
+      </div>
+      
+      <!-- Filters -->
+      <div class="filters-container mb-3 d-flex flex-wrap gap-2">
+        <div class="input-group" style="flex: 1; min-width: 200px;">
+          <input type="text" class="form-control" placeholder="Buscar por nombre exacto o parte..." [(ngModel)]="searchTerm" (input)="onFilterChange()" (keyup.enter)="searchPokemonIfNeeded()">
+          <button class="btn btn-outline-primary" type="button" (click)="searchPokemonIfNeeded()" [disabled]="searching || isLoading">
+            {{ searching ? 'Buscando...' : 'Buscar' }}
+          </button>
+        </div>
+        <select class="form-select" style="width: auto;" [(ngModel)]="selectedType" (change)="onFilterChange()">
+          <option *ngFor="let t of availableTypes" [value]="t">{{ t | titlecase }}</option>
+        </select>
+        <select class="form-select" style="width: auto;" [(ngModel)]="selectedRarity" (change)="onFilterChange()">
+          <option *ngFor="let r of availableRarities" [value]="r">{{ r }}</option>
+        </select>
+        <button class="btn btn-secondary" (click)="clearFilters()">Limpiar</button>
+      </div>
+      
+      <div class="text-center mb-2" *ngIf="isLoading">Cargando cartas desde la API...</div>
+
+      <div class="cards-grid scrollable-area">
+        <div *ngIf="filteredCards.length === 0 && !isLoading" class="text-center text-muted p-4 col-12 w-100">
+          No se encontraron cartas con esos filtros.
+        </div>
+        <div *ngFor="let card of filteredCards" class="card-wrapper" (click)="addCardToDeck(card)">
+          <app-pokemon-card [card]="card" mode="deck"></app-pokemon-card>
+          <div class="add-overlay">+</div>
+        </div>
+      </div>
+      <p class="text-muted mt-2 text-center" style="font-size:0.8rem">
+        * Escribe un nombre exacto (ej. Charizard) y presiona Buscar para traerlo de PokeAPI si no aparece.
+      </p>
+    </div>
+
+    <!-- Right Column: Current Deck Sidebar -->
+    <div class="current-deck-section deck-sidebar">
+      <div class="deck-header mb-3">
+        <input type="text" class="form-control deck-name-input" [(ngModel)]="currentDeck.name" placeholder="Nombre del mazo">
+        <div class="deck-stats mt-2">
+          <div class="d-flex justify-content-between">
+            <span>Cartas en mazo:</span>
+            <span [ngStyle]="{'color': currentDeck.cards.length >= 20 ? 'var(--success)' : 'var(--danger)', 'font-weight': 'bold'}">
+              {{ currentDeck.cards.length }} / 40
+            </span>
+          </div>
+          <div class="progress-bar-container mt-1">
+            <div class="progress-bar-fill" [ngStyle]="{'width': (currentDeck.cards.length / 40 * 100) + '%', 'background': currentDeck.cards.length >= 20 ? 'var(--success)' : 'var(--warning)'}"></div>
+          </div>
+          <small *ngIf="currentDeck.cards.length < 20" class="text-danger mt-1 d-block">Mínimo 20 cartas para jugar</small>
+        </div>
+      </div>
+
+      <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+      <div class="alert alert-success" *ngIf="successMessage">{{ successMessage }}</div>
+
+      <div class="deck-list scrollable-area">
+        <div *ngIf="currentDeck.cards.length === 0" class="empty-deck-state">
+          <div class="fs-1 mb-2 opacity-50">🎴</div>
+          <p>Tu mazo está vacío.</p>
+          <small>Haz clic en las cartas de la izquierda para añadirlas.</small>
+        </div>
+        
+        <div class="deck-item" *ngFor="let card of currentDeck.cards; let i = index">
+          <span class="type-indicator" [attr.data-type]="card.abilityType"></span>
+          <span class="card-name">{{ card.name }}</span>
+          <span class="card-cost" title="Coste de Energía">{{ card.energyCost }}★</span>
+          <button class="btn-remove" title="Quitar del mazo" (click)="removeCardFromDeck(i)">×</button>
+        </div>
+      </div>
+
+      <div class="deck-actions mt-3">
+        <label class="checkbox-container">
+          <input type="checkbox" [(ngModel)]="currentDeck.isActive">
+          Establecer como Mazo Activo
+        </label>
+        <div class="d-flex gap-2 mt-3">
+          <button class="btn btn-primary flex-1 shadow" (click)="saveDeck()">Guardar</button>
+          <button class="btn btn-outline flex-1" (click)="createNewDeck()">Limpiar</button>
+        </div>
+        <button class="btn btn-secondary w-100 mt-2" (click)="generateQuickDeck()" [disabled]="generatingDeck">
+          {{ generatingDeck ? 'Generando...' : 'Generar Mazo Rápido' }}
+        </button>
+      </div>
+      
+      <!-- Saved Decks List -->
+      <div class="saved-decks mt-4" *ngIf="savedDecks.length > 0">
+        <h4 class="mb-2 text-muted fs-6 text-uppercase tracking-wide">Mis Mazos</h4>
+        <div class="saved-deck-item" *ngFor="let d of savedDecks" (click)="loadDeck(d)" [class.active-deck]="d.isActive">
+          <div class="d-flex justify-content-between w-100">
+            <span class="fw-bold">{{ d.name }}</span>
+            <span class="text-muted">{{ d.cards.length }} / 40</span>
+          </div>
+          <div class="mt-1" *ngIf="d.isActive">
+            <span class="badge-active">Activo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

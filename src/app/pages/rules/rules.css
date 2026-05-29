@@ -1,0 +1,28 @@
+.rules-content {
+  line-height: 1.6;
+}
+
+.rules-content section {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.rules-content section:last-child {
+  border-bottom: none;
+}
+
+.rules-content h3 {
+  color: var(--primary-light);
+  margin-bottom: 1rem;
+}
+
+.rules-content ul {
+  padding-left: 20px;
+}
+
+.rules-content li {
+  margin-bottom: 0.5rem;
+}
+
+.mb-5 { margin-bottom: 3rem; }

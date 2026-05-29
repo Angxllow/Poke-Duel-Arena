@@ -1,0 +1,48 @@
+.history-list {
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.history-item {
+  padding: 15px;
+  transition: transform 0.2s;
+}
+
+.history-item:hover {
+  transform: translateX(5px);
+  border-left: 3px solid var(--secondary);
+}
+
+.d-flex { display: flex; }
+.justify-content-between { justify-content: space-between; }
+.align-items-center { align-items: center; }
+.text-end { text-align: right; }
+.py-5 { padding-top: 3rem; padding-bottom: 3rem; }
+.border-top { border-top: 1px solid rgba(255,255,255,0.1); }
+.small { font-size: 0.8rem; }
+
+.badge {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.badge-solo { background: var(--primary); color: white; }
+.badge-online { background: var(--warning); color: black; }
+
+.vs-badge {
+  font-weight: 900;
+  color: var(--danger);
+  font-size: 1.2rem;
+  font-style: italic;
+}
+
+.player-col {
+  flex: 1;
+  font-size: 1.1rem;
+}
+
+.winner { color: var(--success); }
+.loser { color: var(--text-muted); text-decoration: line-through; opacity: 0.7; }

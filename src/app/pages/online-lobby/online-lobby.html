@@ -1,0 +1,48 @@
+<div class="container mt-5 text-center">
+  <div class="glass-panel" style="max-width: 600px; margin: 0 auto;">
+    <h2 class="mb-4 text-secondary">Lobby Multijugador</h2>
+
+    <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <div *ngIf="!currentRoom">
+      <div class="row-actions mb-4">
+        <button class="btn btn-primary btn-lg w-100" (click)="createRoom()" [disabled]="loading">
+          Crear Nueva Sala
+        </button>
+      </div>
+
+      <div class="divider mb-4"><span>O</span></div>
+
+      <div class="join-room-section glass-panel mt-4">
+        <h3>Unirse a una Sala</h3>
+        <div class="d-flex gap-2">
+          <input type="text" class="form-control" placeholder="Código de la sala" [(ngModel)]="roomCodeToJoin" style="text-transform: uppercase;">
+          <button class="btn btn-outline" (click)="joinRoom()">Unirse</button>
+        </div>
+        <div class="alert alert-danger mt-2" *ngIf="errorMessage">{{ errorMessage }}</div>
+        
+        <div class="mt-3 text-center" style="font-size: 0.9rem; color: var(--success);">
+          <span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true" style="animation-duration: 2s;"></span>
+          Conexión a Supabase Realtime Establecida
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="currentRoom && currentRoom.status === 'WAITING'" class="waiting-room">
+      <h3 class="mb-3">Sala Creada</h3>
+      <p>Comparte este código con tu oponente:</p>
+      
+      <div class="code-display mb-4" (click)="copyCode()">
+        {{ currentRoom.room_code }}
+      </div>
+      
+      <div class="spinner-container mb-4">
+        <div class="spinner"></div>
+        <p class="mt-2 text-muted">Esperando a que el oponente se una...</p>
+      </div>
+
+      <button class="btn btn-danger" (click)="cancelRoom()">Cancelar Sala</button>
+    </div>
+
+  </div>
+</div>

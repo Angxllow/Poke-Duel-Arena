@@ -1,0 +1,123 @@
+.battlefield-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  position: relative;
+  min-height: 480px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.zone {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.divider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  margin: 10px 0;
+}
+
+.player-field,
+.opponent-field {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.slot {
+  width: 120px;
+  height: 170px;
+  border: 2px dashed rgba(255,255,255,0.1);
+  border-radius: var(--radius-md);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-on-field {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s;
+  cursor: pointer;
+}
+
+.card-on-field.defending {
+  transform: rotate(90deg);
+}
+
+.card-on-field.exhausted {
+  filter: grayscale(0.5) brightness(0.8);
+}
+
+.card-on-field:hover {
+  transform: translateY(-10px) scale(1.05);
+  z-index: 10;
+}
+.card-on-field.defending:hover {
+  transform: rotate(90deg) scale(1.05);
+}
+
+.targetable {
+  box-shadow: 0 0 15px var(--danger);
+  border-radius: var(--radius-md);
+}
+
+.attackable {
+  box-shadow: inset 0 0 50px rgba(239, 68, 68, 0.2);
+  cursor: crosshair;
+}
+
+.status-indicators {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 5;
+}
+
+.hp-badge {
+  background: var(--danger);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  border: 1px solid white;
+}
+
+.def-badge {
+  background: var(--info);
+  padding: 2px;
+  border-radius: 50%;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.ability-badge {
+  background: var(--warning);
+  padding: 2px;
+  border-radius: 50%;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.ability-badge:hover {
+  transform: scale(1.2);
+}

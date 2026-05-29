@@ -1,0 +1,21 @@
+<div class="indicator-container" [class.opponent-turn]="!isPlayerTurn">
+  <div class="turn-info">
+    Turno {{ turnNumber }} - {{ isPlayerTurn ? 'Tu Turno' : 'Turno Rival' }}
+  </div>
+  
+  <div class="phases">
+    <div class="phase" [class.active]="currentPhase === 'DRAW'">ROBAR</div>
+    <div class="phase" [class.active]="currentPhase === 'MAIN'">PPAL</div>
+    <div class="phase" [class.active]="currentPhase === 'BATTLE'">BATALLA</div>
+    <div class="phase" [class.active]="currentPhase === 'END'">FIN</div>
+  </div>
+
+  <button class="btn btn-primary btn-sm mt-2 w-100" 
+          [disabled]="!isPlayerTurn || currentPhase === 'DRAW'" 
+          (click)="onNextPhase()">
+    <span *ngIf="currentPhase === 'MAIN'">Ir a Batalla</span>
+    <span *ngIf="currentPhase === 'BATTLE'">Ir a fase final</span>
+    <span *ngIf="currentPhase === 'END'">Terminar turno</span>
+    <span *ngIf="currentPhase === 'DRAW'">Robar desde el panel</span>
+  </button>
+</div>

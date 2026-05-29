@@ -1,0 +1,29 @@
+<div class="container auth-container">
+  <div class="glass-panel auth-panel">
+    <h2 class="text-center mb-4">Iniciar Sesión</h2>
+    
+    <div class="alert alert-danger error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+    <div class="alert alert-success success-message" *ngIf="successMessage">{{ successMessage }}</div>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label class="form-label">Correo Electrónico</label>
+        <input type="email" class="form-control" name="email" [(ngModel)]="email" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <input type="password" class="form-control" name="password" [(ngModel)]="password" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mt-3" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Ingresar</span>
+        <span *ngIf="isLoading">Cargando...</span>
+      </button>
+    </form>
+
+    <div class="text-center mt-4 text-muted" style="font-size: 0.9rem;">
+      ¿No tienes una cuenta? <a routerLink="/register" style="color: var(--secondary);">Regístrate aquí</a>
+    </div>
+  </div>
+</div>

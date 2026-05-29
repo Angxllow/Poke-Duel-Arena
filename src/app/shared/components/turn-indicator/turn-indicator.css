@@ -1,0 +1,42 @@
+.indicator-container {
+  background: var(--bg-card);
+  border: 1px solid var(--success);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  text-align: center;
+  transition: border-color 0.3s;
+}
+
+.indicator-container.opponent-turn {
+  border-color: var(--danger);
+}
+
+.turn-info {
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.phases {
+  display: flex;
+  gap: 5px;
+  justify-content: space-between;
+}
+
+.phase {
+  flex: 1;
+  font-size: 0.7rem;
+  background: rgba(0,0,0,0.5);
+  padding: 5px 2px;
+  border-radius: 4px;
+  color: var(--text-muted);
+}
+
+.phase.active {
+  background: var(--secondary);
+  color: black;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(255, 222, 0, 0.5);
+}
+
+.w-100 { width: 100%; }

@@ -1,0 +1,11 @@
+<div class="log-container">
+  <div class="log-header">
+    Historial de Batalla
+  </div>
+  <div class="log-list">
+    <div class="log-entry" *ngFor="let log of logs">
+      <span class="log-time">{{ log.createdAt | date:'HH:mm:ss' }}</span>
+      <span class="log-message" [ngClass]="'type-' + log.type.toLowerCase()">{{ log.message }}</span>
+    </div>
+  </div>
+</div>

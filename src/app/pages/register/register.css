@@ -1,0 +1,13 @@
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 100px);
+}
+
+.auth-panel {
+  width: 100%;
+  max-width: 400px;
+}
+
+.w-100 { width: 100%; }

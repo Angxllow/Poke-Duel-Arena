@@ -1,0 +1,46 @@
+<div class="card-container" 
+     [class.face-down]="isFaceDown" 
+     [class.battle-mode]="mode === 'battle'"
+     [class.deck-mode]="mode === 'deck'"
+     (click)="onClick()">
+  <div class="card-inner">
+    <!-- Face Down (Back of card) -->
+    <div class="card-back" *ngIf="isFaceDown">
+      <div class="pokeball-logo"></div>
+    </div>
+    
+    <!-- Face Up (Front of card) -->
+    <div class="card-front" *ngIf="!isFaceDown" [attr.data-type]="card.abilityType">
+      <div class="card-header">
+        <span class="card-name">{{ card.name }}</span>
+        <div class="card-energy-hp">
+          <span class="energy-cost">{{ card.energyCost }}★</span>
+          <span class="hp">{{ card.hp }} HP</span>
+        </div>
+      </div>
+      
+      <div class="card-image-container">
+        <img [src]="card.imageUrl" [alt]="card.name" loading="lazy">
+      </div>
+      
+      <div class="card-stats">
+        <div class="stat"><span class="icon">⚔️</span> {{ card.attack }}</div>
+        <div class="stat"><span class="icon">🛡️</span> {{ card.defense }}</div>
+        <div class="stat"><span class="icon">❤️</span> {{ card.hp }}</div>
+      </div>
+      <div class="card-types" style="display: flex; gap: 4px; justify-content: center; margin-bottom: 8px;">
+        <span *ngFor="let type of card.types" class="type-badge" [ngClass]="type.toLowerCase()">
+          {{ type | uppercase }}
+        </span>
+      </div>
+      <div class="card-ability" style="font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 4px; border-radius: 4px; text-align: center;">
+        <strong>Habilidad:</strong> {{ card.abilityName }}
+      </div>
+      
+      <div class="card-footer">
+        <span class="rarity" [attr.data-rarity]="card.rarity">{{ card.rarity }}</span>
+        <span class="type-badge">{{ card.types[0] }}</span>
+      </div>
+    </div>
+  </div>
+</div>

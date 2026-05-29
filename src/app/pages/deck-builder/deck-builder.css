@@ -1,0 +1,235 @@
+.deck-builder-layout {
+  display: flex;
+  gap: 2rem;
+  height: calc(100vh - 140px);
+}
+
+.available-cards-section {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.current-deck-section, .deck-sidebar {
+  flex: 1;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-left: 1px solid rgba(255,255,255,0.05);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: -4px 0 20px rgba(0,0,0,0.3);
+}
+
+.filters-container {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.form-control-sm {
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.scrollable-area {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+  justify-items: center;
+}
+
+.card-wrapper {
+  position: relative;
+  cursor: pointer;
+}
+
+.add-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(16, 185, 129, 0.4);
+  color: white;
+  font-size: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.card-wrapper:hover .add-overlay {
+  opacity: 1;
+}
+
+.deck-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.deck-name-input {
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: rgba(0,0,0,0.2) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  color: white;
+}
+
+.deck-stats {
+  font-size: 0.9rem;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 6px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.empty-deck-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  color: var(--text-muted);
+  padding: 2rem;
+  background: rgba(0,0,0,0.1);
+  border-radius: var(--radius-md);
+  border: 2px dashed rgba(255,255,255,0.1);
+}
+
+.deck-list {
+  background: rgba(0,0,0,0.2);
+  border-radius: var(--radius-md);
+  padding: 0.5rem;
+}
+
+.deck-item {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem;
+  background: rgba(30, 41, 59, 0.8);
+  margin-bottom: 0.35rem;
+  border-radius: var(--radius-sm);
+  border-left: 4px solid transparent;
+  transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+.deck-item:hover {
+  transform: translateX(4px);
+  background: rgba(51, 65, 85, 0.9);
+}
+
+.type-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.type-indicator[data-type="fire"] { background: var(--type-fire); }
+.type-indicator[data-type="water"] { background: var(--type-water); }
+.type-indicator[data-type="grass"] { background: var(--type-grass); }
+.type-indicator[data-type="electric"] { background: var(--type-electric); }
+.type-indicator[data-type="dark"] { background: var(--type-dark); border: 1px solid white;}
+.type-indicator[data-type="psychic"] { background: #F85888; }
+.type-indicator[data-type="normal"] { background: #A8A878; }
+
+.card-name {
+  flex: 1;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.card-cost {
+  margin-right: 1rem;
+  color: var(--secondary);
+  font-weight: bold;
+}
+
+.btn-remove {
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.btn-remove:hover {
+  color: var(--danger);
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.tracking-wide {
+  letter-spacing: 0.05em;
+}
+
+.saved-deck-item {
+  padding: 0.75rem;
+  background: rgba(255,255,255,0.05);
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: background var(--transition-fast);
+}
+
+.saved-deck-item:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.saved-deck-item.active-deck {
+  border-left: 3px solid var(--success);
+}
+
+.badge-active {
+  background: var(--success);
+  color: white;
+  padding: 0.15rem 0.4rem;
+  border-radius: var(--radius-md);
+  font-size: 0.65rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.alert-success {
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid var(--success);
+  color: #6ee7b7;
+}
+
+@media (max-width: 900px) {
+  .deck-builder-layout {
+    flex-direction: column;
+    height: auto;
+  }
+  .available-cards-section, .current-deck-section {
+    height: 60vh;
+  }
+  .deck-sidebar {
+    min-width: 100%;
+  }
+}

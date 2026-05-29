@@ -1,0 +1,65 @@
+<div class="container mt-4 mb-4">
+  <div class="glass-panel text-center mb-4">
+    <h1 class="mb-2 text-secondary">Colección de Cartas</h1>
+    <p class="text-muted">Explora todas las cartas Pokémon disponibles. Busca, filtra y planea tu estrategia.</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="glass-panel mb-4 filters-container">
+    <div class="form-group mb-0 filter-item">
+      <label class="form-label">Buscar</label>
+      <input type="text" class="form-control" placeholder="Ej: Pikachu" [(ngModel)]="searchTerm" (input)="applyFilters()">
+    </div>
+    
+    <div class="form-group mb-0 filter-item">
+      <label class="form-label">Tipo</label>
+      <select class="form-control" [(ngModel)]="selectedType" (change)="applyFilters()">
+        <option value="">Todos los tipos</option>
+        <option *ngFor="let t of availableTypes" [value]="t">{{ t | titlecase }}</option>
+      </select>
+    </div>
+    
+    <div class="form-group mb-0 filter-item">
+      <label class="form-label">Rareza</label>
+      <select id="rarityFilter" class="form-select" [(ngModel)]="selectedRarity" (change)="applyFilters()">
+        <option value="">Todas las rarezas</option>
+        <option *ngFor="let r of availableRarities" [value]="r">{{ r }}</option>
+      </select>
+    </div>
+    <div class="form-group mb-0 filter-item d-flex align-items-end">
+      <button class="btn btn-secondary w-100" style="height: 38px;" (click)="clearFilters()">Limpiar Filtros</button>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <p class="collection-count text-white mb-3" *ngIf="allCards.length > 0">
+    Mostrando {{ filteredCards.length }} de {{ allCards.length }} cartas cargadas.
+    Total disponible en PokeAPI: {{ totalCount }}.
+  </p>
+
+  <!-- Grid -->
+  <div class="cards-grid mb-4">
+    <app-pokemon-card 
+      *ngFor="let card of filteredCards" 
+      [card]="card" 
+      mode="collection">
+    </app-pokemon-card>
+  </div>
+
+  <!-- Empty state -->
+  <div class="text-center p-4 glass-panel mb-4" *ngIf="!loading && filteredCards.length === 0">
+    <h3 class="text-muted">No se encontraron cartas con estos filtros.</h3>
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center">
+    <button 
+      type="button" 
+      class="load-more-btn btn btn-primary" 
+      (click)="loadMoreCards()" 
+      [disabled]="loading || loadingMore || !hasMoreCards">
+      {{ loadingMore ? 'Cargando más...' : hasMoreCards ? 'Mostrar más cartas' : 'No hay más cartas' }}
+    </button>
+  </div>
+</div>
