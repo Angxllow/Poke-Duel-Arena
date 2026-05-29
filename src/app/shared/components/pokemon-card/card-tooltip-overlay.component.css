@@ -1,0 +1,104 @@
+.card-tooltip-overlay {
+  width: 250px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px; /* Safe static radius */
+  box-shadow: 0 15px 35px rgba(0,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.05);
+  padding: 1.2rem;
+  color: white;
+  pointer-events: none; /* Let mouse pass through just in case */
+  animation: fadeIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.tooltip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 0.5rem;
+}
+
+.tooltip-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #fbbf24; /* secondary color */
+}
+
+.tooltip-hp {
+  font-weight: 900;
+  color: #fca5a5;
+  background: rgba(220, 38, 38, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.tooltip-types {
+  margin-bottom: 0.8rem;
+  display: flex;
+  gap: 5px;
+}
+
+.type-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+  text-shadow: 1px 1px 2px black;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Same type colors as main card */
+.type-badge[data-type="fire"] { background: linear-gradient(135deg, #f87171, #991b1b); }
+.type-badge[data-type="water"] { background: linear-gradient(135deg, #60a5fa, #1e3a8a); }
+.type-badge[data-type="grass"] { background: linear-gradient(135deg, #34d399, #065f46); }
+.type-badge[data-type="electric"] { background: linear-gradient(135deg, #fcd34d, #b45309); }
+.type-badge[data-type="psychic"] { background: linear-gradient(135deg, #c084fc, #6b21a8); }
+.type-badge[data-type="fighting"] { background: linear-gradient(135deg, #fb923c, #9a3412); }
+.type-badge[data-type="fairy"] { background: linear-gradient(135deg, #f472b6, #9d174d); }
+.type-badge[data-type="dark"] { background: linear-gradient(135deg, #475569, #0f172a); }
+.type-badge[data-type="normal"] { background: linear-gradient(135deg, #cbd5e1, #64748b); }
+.type-badge[data-type="poison"] { background: linear-gradient(135deg, #a78bfa, #4c1d95); }
+.type-badge[data-type="bug"] { background: linear-gradient(135deg, #a3e635, #3f6212); }
+.type-badge[data-type="flying"] { background: linear-gradient(135deg, #7dd3fc, #0284c7); }
+.type-badge[data-type="ghost"] { background: linear-gradient(135deg, #818cf8, #312e81); }
+.type-badge[data-type="ground"] { background: linear-gradient(135deg, #fcd34d, #92400e); }
+.type-badge[data-type="rock"] { background: linear-gradient(135deg, #d6d3d1, #57534e); }
+.type-badge[data-type="ice"] { background: linear-gradient(135deg, #a5f3fc, #0891b2); }
+.type-badge[data-type="dragon"] { background: linear-gradient(135deg, #818cf8, #831843); }
+.type-badge[data-type="steel"] { background: linear-gradient(135deg, #94a3b8, #334155); }
+
+.tooltip-stats {
+  display: flex;
+  justify-content: space-around;
+  background: rgba(0,0,0,0.5);
+  padding: 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.tooltip-ability .ability-title {
+  color: #93c5fd; /* primary-light color */
+  font-size: 1.05rem;
+  margin-bottom: 0.4rem;
+  letter-spacing: 1px;
+}
+
+.tooltip-ability .ability-desc {
+  color: #94a3b8; /* text-muted color */
+  font-size: 0.95rem;
+  line-height: 1.5;
+  display: block;
+}

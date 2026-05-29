@@ -52,24 +52,5 @@
       </div>
     </div>
   </div>
-
-  <!-- Premium Tooltip for Battle Mode -->
-  <div class="card-tooltip" *ngIf="mode === 'battle' || mode === 'deck'">
-    <div class="tooltip-header">
-      <span class="tooltip-name">{{ card.name }}</span>
-      <span class="tooltip-hp">{{ card.hp }} HP</span>
-    </div>
-    <div class="tooltip-types">
-      <span *ngFor="let type of card.types" class="type-badge" [attr.data-type]="type.toLowerCase()">{{ type | uppercase }}</span>
-    </div>
-    <div class="tooltip-stats">
-      <span>⚔️ {{ card.attack }}</span>
-      <span>🛡️ {{ card.defense }}</span>
-    </div>
-    <div class="tooltip-ability" *ngIf="card.abilityName">
-      <div class="ability-title">⚡ {{ card.abilityName }}</div>
-      <div class="ability-desc">{{ card.abilityDescription }}</div>
-    </div>
-  </div>
 </div>
 
