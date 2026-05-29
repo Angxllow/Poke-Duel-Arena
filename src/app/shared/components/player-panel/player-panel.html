@@ -1,26 +1,35 @@
 <div class="panel-container" [class.opponent]="isOpponent" [class.active-turn]="isActiveTurn">
   <div class="player-info">
-    <div class="avatar d-flex justify-content-center align-items-center" style="font-size: 2rem;">
+    <div class="avatar" [class.glow-avatar]="isActiveTurn">
       <span *ngIf="isOpponent">🤖</span>
       <span *ngIf="!isOpponent">👤</span>
     </div>
     <div class="details">
       <div class="username">{{ username }}</div>
-      <div class="hp-bar-container">
-        <div class="hp-bar life-fill" [ngClass]="getLifeBarClass()" [style.width.%]="getLifePercent()"></div>
-        <div class="hp-text">{{ getDisplayedLife() }} / {{ maxLifePoints || 500 }} LP</div>
+      <div class="hp-wrapper">
+        <div class="hp-bar-container">
+          <div class="hp-bar" [ngClass]="getLifeBarClass()" [style.width.%]="getLifePercent()"></div>
+          <div class="hp-bar-glare"></div>
+        </div>
+        <div class="hp-text">{{ getDisplayedLife() }} <small>/ {{ maxLifePoints || 500 }} LP</small></div>
       </div>
     </div>
   </div>
   
   <div class="deck-info">
     <div class="deck-stat">
-      <span class="label">Mazo:</span>
-      <span class="value">{{ deckCount }}</span>
+      <span class="icon">🎴</span>
+      <div class="stat-content">
+        <span class="label">Mazo</span>
+        <span class="value">{{ deckCount }}</span>
+      </div>
     </div>
     <div class="deck-stat">
-      <span class="label">Descarte:</span>
-      <span class="value">{{ discardCount }}</span>
+      <span class="icon">🗑️</span>
+      <div class="stat-content">
+        <span class="label">Desc.</span>
+        <span class="value">{{ discardCount }}</span>
+      </div>
     </div>
   </div>
 </div>

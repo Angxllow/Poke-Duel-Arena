@@ -1,45 +1,67 @@
-<div class="container mt-5 mb-5">
-  <div class="glass-panel mx-auto" style="max-width: 800px;">
-    <h2 class="text-center mb-4 text-secondary">Historial de Partidas Locales</h2>
+<div class="container mt-5 mb-5 animate-fade-in">
+  <div class="glass-panel mx-auto" style="max-width: 900px;">
+    <h2 class="text-center mb-4" style="color: var(--secondary); text-shadow: 0 0 10px rgba(255,222,0,0.5); font-weight: 800;">
+      Historial de Batallas
+    </h2>
     
-    <div *ngIf="loading" class="text-center text-muted py-5">
-      Cargando historial...
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="skeleton-card mb-3" *ngFor="let _ of [1,2,3]"></div>
     </div>
 
-    <div *ngIf="errorMessage" class="alert alert-danger">
+    <div *ngIf="errorMessage" class="alert alert-danger" style="background: rgba(239, 68, 68, 0.2); border: 1px solid var(--danger); color: #fca5a5;">
       {{ errorMessage }}
     </div>
 
     @if (!loading && results.length > 0) {
-      <div class="row">
-        <div class="col-md-6 mb-3" *ngFor="let match of results">
-          <div class="history-card" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; border-left: 5px solid; display: flex; flex-direction: column; gap: 5px;" 
-               [ngStyle]="{'border-color': match.winnerName.includes('Jugador') || match.winnerName === 'Tú' ? 'var(--success)' : 'var(--danger)'}">
-            <div class="d-flex justify-content-between align-items-center">
-              <h4 class="m-0" style="font-size:1.1rem;">
-                <span *ngIf="match.winnerName.includes('Jugador') || match.winnerName === 'Tú'" class="text-success">🏆 VICTORIA</span>
-                <span *ngIf="!(match.winnerName.includes('Jugador') || match.winnerName === 'Tú')" class="text-danger">💀 DERROTA</span>
-              </h4>
-              <span class="badge" [ngClass]="match.mode === 'SOLO' ? 'bg-primary' : 'bg-warning'">{{ match.mode }}</span>
+      <div class="history-list d-flex flex-column gap-3">
+        <div *ngFor="let match of results" 
+             class="history-card" 
+             [ngStyle]="{'--status-color': isVictory(match) ? 'var(--success)' : 'var(--danger)'}">
+          
+          <div class="hc-header">
+            <h4 class="hc-title">
+              <span *ngIf="isVictory(match)">🏆 VICTORIA</span>
+              <span *ngIf="!isVictory(match)">💀 DERROTA</span>
+            </h4>
+            <div class="hc-badges">
+              <span class="badge" [ngClass]="match.mode === 'SOLO' ? 'bg-primary' : 'bg-warning text-dark'">{{ match.mode }}</span>
+              <span class="badge bg-dark border border-secondary">{{ match.synced ? 'Sincronizado' : 'Local' }}</span>
             </div>
-            <div class="text-muted" style="font-size: 0.8rem; margin-top: 5px;">
-              <span>{{ match.createdAt | date:'short' }}</span>
-              <span class="ms-2 badge bg-secondary">{{ match.synced ? 'Sincronizado' : 'Local' }}</span>
+          </div>
+          
+          <div class="hc-body">
+            <div class="hc-info">
+              <div class="hc-date">{{ match.createdAt | date:'medium' }}</div>
+              <div class="hc-players">
+                <span class="player winner">{{ match.winnerName || 'Desconocido' }}</span> 
+                <span class="vs">vs</span> 
+                <span class="player loser">{{ match.loserName || 'Desconocido' }}</span>
+              </div>
             </div>
-            <div style="font-size: 0.9rem; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px;">
-              <strong>Resultado:</strong> Ganó {{ match.winnerName }} contra {{ match.loserName }}.<br>
-              <strong>Razón:</strong> {{ match.resultReason }}<br>
-              <strong>Turnos:</strong> {{ match.turnsPlayed }}<br>
-              <small class="text-muted">Vida Final: {{ match.finalPlayerLife }} vs {{ match.finalOpponentLife }}</small>
+            
+            <div class="hc-stats">
+              <div class="stat-box">
+                <span class="stat-label">Razón</span>
+                <span class="stat-value">{{ match.resultReason }}</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-label">Turnos</span>
+                <span class="stat-value">{{ match.turnsPlayed }}</span>
+              </div>
+              <div class="stat-box" *ngIf="match.finalPlayerLife !== undefined">
+                <span class="stat-label">Vida Final</span>
+                <span class="stat-value hp-value">{{ match.finalPlayerLife }} / {{ match.finalOpponentLife }}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     } @else if (!loading && results.length === 0) {
-      <div class="text-center text-muted py-5">
-        No has jugado ninguna partida todavía.
-        <br><br>
-        <a routerLink="/menu" class="btn btn-primary">Ir a Jugar</a>
+      <div class="empty-state text-center py-5">
+        <div class="empty-icon" style="font-size: 4rem; opacity: 0.5; margin-bottom: 1rem;">📭</div>
+        <h4 class="text-muted mb-3">No hay batallas registradas.</h4>
+        <p class="text-muted mb-4">Tus partidas locales y online aparecerán aquí.</p>
+        <a routerLink="/menu" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem;">Empezar a Jugar</a>
       </div>
     }
   </div>

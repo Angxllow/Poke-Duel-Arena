@@ -1,44 +1,95 @@
 .log-container {
   background: var(--bg-card);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: var(--radius-lg);
   height: 100%;
   display: flex;
   flex-direction: column;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5), var(--shadow-sm);
+  overflow: hidden;
 }
 
 .log-header {
-  padding: 10px;
-  background: rgba(0,0,0,0.5);
-  font-weight: bold;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  text-align: center;
+  padding: 12px 15px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(0,0,0,0.2));
+  font-weight: 900;
+  border-bottom: 2px solid rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 .log-list {
   flex: 1;
   overflow-y: auto;
-  padding: 10px;
+  padding: 15px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
+  scroll-behavior: smooth;
 }
 
 .log-entry {
-  font-size: 0.8rem;
-  padding: 5px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 4px;
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  background: rgba(0,0,0,0.3);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: all 0.3s ease;
+  line-height: 1.4;
+}
+
+.log-entry:hover {
+  background: rgba(0,0,0,0.5);
+  transform: translateX(2px);
 }
 
 .log-time {
-  color: var(--text-muted);
-  margin-right: 5px;
+  color: rgba(255,255,255,0.4);
   font-size: 0.7rem;
+  font-family: monospace;
 }
 
-.type-system { color: var(--info); font-weight: bold; }
-.type-attack_card { color: var(--warning); }
-.type-attack_player { color: var(--danger); font-weight: bold; }
-.type-summon { color: var(--success); }
-.type-end_turn { color: var(--text-muted); font-style: italic; }
+.log-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.log-badge {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.log-message {
+  color: var(--text-main);
+}
+
+/* Event Types Styling */
+.entry-system { border-left-color: var(--info); }
+.badge-system { background: var(--info); box-shadow: 0 0 5px var(--info); }
+
+.entry-attack_card { border-left-color: var(--warning); }
+.badge-attack_card { background: var(--warning); box-shadow: 0 0 5px var(--warning); }
+
+.entry-attack_player { border-left-color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+.badge-attack_player { background: var(--danger); box-shadow: 0 0 5px var(--danger); }
+
+.entry-summon { border-left-color: var(--success); }
+.badge-summon { background: var(--success); box-shadow: 0 0 5px var(--success); }
+
+.entry-end_turn { border-left-color: var(--text-muted); opacity: 0.7; }
+.badge-end_turn { background: var(--text-muted); }
+
+::ng-deep .text-warning { color: var(--secondary) !important; font-weight: bold; text-shadow: 0 0 5px rgba(255,222,0,0.5); }

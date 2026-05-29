@@ -240,6 +240,8 @@ export class OnlineGame implements OnInit, OnDestroy {
           totalDamagePlayer2: 0,
           cardsUsedPlayer1: 0,
           cardsUsedPlayer2: 0,
+          finalPlayerLife: Math.max(0, this.gameState.player1.lifePoints),
+          finalOpponentLife: Math.max(0, this.gameState.player2.lifePoints),
           createdAt: new Date().toISOString()
         };
         

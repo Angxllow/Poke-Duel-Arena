@@ -7,40 +7,50 @@
     <!-- Face Down (Back of card) -->
     <div class="card-back" *ngIf="isFaceDown">
       <div class="pokeball-logo"></div>
+      <div class="card-foil"></div>
     </div>
     
     <!-- Face Up (Front of card) -->
-    <div class="card-front" *ngIf="!isFaceDown" [attr.data-type]="card.abilityType">
+    <div class="card-front" *ngIf="!isFaceDown" [attr.data-type]="card.abilityType || card.types[0]">
+      <div class="card-foil" *ngIf="card.rarity === 'Legendaria' || card.rarity === 'Épica'"></div>
+      
       <div class="card-header">
         <span class="card-name">{{ card.name }}</span>
         <div class="card-energy-hp">
-          <span class="energy-cost">{{ card.energyCost }}★</span>
-          <span class="hp">{{ card.hp }} HP</span>
+          <span class="hp">{{ card.hp }} <small>HP</small></span>
+          <span class="energy-cost">{{ card.energyCost }}<span class="star-icon">★</span></span>
         </div>
       </div>
       
-      <div class="card-image-container">
-        <img [src]="card.imageUrl" [alt]="card.name" loading="lazy">
+      <div class="card-image-wrapper">
+        <div class="card-image-container">
+          <img [src]="card.imageUrl" [alt]="card.name" loading="lazy">
+        </div>
       </div>
       
-      <div class="card-stats">
-        <div class="stat"><span class="icon">⚔️</span> {{ card.attack }}</div>
-        <div class="stat"><span class="icon">🛡️</span> {{ card.defense }}</div>
-        <div class="stat"><span class="icon">❤️</span> {{ card.hp }}</div>
-      </div>
-      <div class="card-types" style="display: flex; gap: 4px; justify-content: center; margin-bottom: 8px;">
-        <span *ngFor="let type of card.types" class="type-badge" [ngClass]="type.toLowerCase()">
-          {{ type | uppercase }}
-        </span>
-      </div>
-      <div class="card-ability" style="font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 4px; border-radius: 4px; text-align: center;">
-        <strong>Habilidad:</strong> {{ card.abilityName }}
+      <div class="card-body">
+        <div class="card-types">
+          <span *ngFor="let type of card.types" class="type-badge" [attr.data-type]="type.toLowerCase()">
+            {{ type | uppercase }}
+          </span>
+        </div>
+        
+        <div class="card-stats">
+          <div class="stat"><span class="icon">⚔️</span> <strong>{{ card.attack }}</strong></div>
+          <div class="stat"><span class="icon">🛡️</span> <strong>{{ card.defense }}</strong></div>
+        </div>
+
+        <div class="card-ability" *ngIf="mode !== 'battle' && mode !== 'deck'">
+          <div class="ability-title">⚡ {{ card.abilityName }}</div>
+          <div class="ability-desc" *ngIf="card.abilityDescription">{{ card.abilityDescription }}</div>
+        </div>
       </div>
       
-      <div class="card-footer">
+      <div class="card-footer" *ngIf="mode !== 'battle'">
         <span class="rarity" [attr.data-rarity]="card.rarity">{{ card.rarity }}</span>
-        <span class="type-badge">{{ card.types[0] }}</span>
+        <span class="id-badge">#{{ card.id.toString().padStart(3, '0') }}</span>
       </div>
     </div>
   </div>
 </div>
+

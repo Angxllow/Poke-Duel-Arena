@@ -1,39 +1,39 @@
 <div class="container auth-container">
   <div class="glass-panel auth-panel">
-    <h2 class="text-center mb-4">Registro</h2>
+    <h2 class="auth-title">CREAR CUENTA</h2>
     
     <div class="alert alert-danger error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
     <div class="alert alert-success success-message" *ngIf="successMessage">{{ successMessage }}</div>
 
     <form (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label class="form-label">Nombre de Usuario</label>
-        <input type="text" class="form-control" name="username" [(ngModel)]="username" required>
+        <label class="form-label">Nombre de Entrenador</label>
+        <input type="text" class="form-control" name="username" [(ngModel)]="username" required placeholder="Ash Ketchum">
       </div>
 
       <div class="form-group">
         <label class="form-label">Correo Electrónico</label>
-        <input type="email" class="form-control" name="email" [(ngModel)]="email" required>
+        <input type="email" class="form-control" name="email" [(ngModel)]="email" required placeholder="tu@email.com">
       </div>
 
       <div class="form-group">
         <label class="form-label">Contraseña</label>
-        <input type="password" class="form-control" name="password" [(ngModel)]="password" required minlength="6">
+        <input type="password" class="form-control" name="password" [(ngModel)]="password" required minlength="6" placeholder="••••••••">
       </div>
 
       <div class="form-group">
         <label class="form-label">Confirmar Contraseña</label>
-        <input type="password" class="form-control" name="confirmPassword" [(ngModel)]="confirmPassword" required>
+        <input type="password" class="form-control" name="confirmPassword" [(ngModel)]="confirmPassword" required placeholder="••••••••">
       </div>
 
-      <button type="submit" class="btn btn-primary w-100 mt-3" [disabled]="isLoading">
+      <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading">
         <span *ngIf="!isLoading">Registrarse</span>
-        <span *ngIf="isLoading">Cargando...</span>
+        <span *ngIf="isLoading">Creando...</span>
       </button>
     </form>
 
     <div class="text-center mt-4 text-muted" style="font-size: 0.9rem;">
-      ¿Ya tienes una cuenta? <a routerLink="/login" style="color: var(--secondary);">Inicia sesión aquí</a>
+      ¿Ya eres entrenador? <a routerLink="/login" class="auth-link">Inicia sesión aquí</a>
     </div>
   </div>
 </div>

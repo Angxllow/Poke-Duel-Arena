@@ -1,31 +1,71 @@
 .hand-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 10px;
-  min-height: 150px;
+  align-items: flex-end;
+  padding: 20px 10px 10px 10px;
+  min-height: 240px;
+  perspective: 1000px;
+}
+
+.opponent-hand {
+  align-items: flex-start;
+  padding: 10px 10px 20px 10px;
 }
 
 .hand-cards {
   display: flex;
-  gap: 10px;
   justify-content: center;
+  position: relative;
+  /* Allow cards to overlap */
+  margin: 0 auto;
 }
 
 .hand-card-wrapper {
-  transition: transform 0.2s;
-  margin-left: 0;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  margin-left: -50px;
+  position: relative;
+  transform-origin: bottom center;
+  /* subtle default rotation and translation will be applied via nth-child below, or dynamically via TS. For CSS, we do a basic fan */
 }
 
 .hand-card-wrapper:first-child {
   margin-left: 0;
 }
 
+/* Base Fan Effect for up to 7 cards (standard max hand) */
+.hand-card-wrapper:nth-child(1) { transform: rotate(-10deg) translateY(10px); z-index: 1; }
+.hand-card-wrapper:nth-child(2) { transform: rotate(-5deg) translateY(5px); z-index: 2; }
+.hand-card-wrapper:nth-child(3) { transform: rotate(0deg) translateY(0); z-index: 3; }
+.hand-card-wrapper:nth-child(4) { transform: rotate(5deg) translateY(5px); z-index: 4; }
+.hand-card-wrapper:nth-child(5) { transform: rotate(10deg) translateY(10px); z-index: 5; }
+.hand-card-wrapper:nth-child(6) { transform: rotate(15deg) translateY(15px); z-index: 6; }
+.hand-card-wrapper:nth-child(7) { transform: rotate(20deg) translateY(20px); z-index: 7; }
+
+/* Opponent Fan is reversed */
+.opponent-hand .hand-card-wrapper {
+  transform-origin: top center;
+}
+.opponent-hand .hand-card-wrapper:nth-child(1) { transform: rotate(10deg) translateY(-10px); }
+.opponent-hand .hand-card-wrapper:nth-child(2) { transform: rotate(5deg) translateY(-5px); }
+.opponent-hand .hand-card-wrapper:nth-child(3) { transform: rotate(0deg) translateY(0); }
+.opponent-hand .hand-card-wrapper:nth-child(4) { transform: rotate(-5deg) translateY(-5px); }
+.opponent-hand .hand-card-wrapper:nth-child(5) { transform: rotate(-10deg) translateY(-10px); }
+
+/* Hover Effects */
 .hand-card-wrapper.selectable:hover {
-  transform: translateY(-20px);
-  z-index: 10;
+  transform: translateY(-40px) scale(1.15) rotate(0deg) !important;
+  z-index: 20 !important;
 }
 
-.opponent-hand .hand-card-wrapper {
-  margin-left: 0;
+.opponent-hand .hand-card-wrapper:hover {
+  transform: translateY(10px) scale(1.05) rotate(0deg) !important;
+  z-index: 20 !important;
+}
+
+.hand-card-wrapper.selected {
+  transform: translateY(-50px) scale(1.15) rotate(0deg) !important;
+  z-index: 30 !important;
+  outline: 4px solid var(--secondary);
+  box-shadow: 0 20px 40px rgba(255, 222, 0, 0.6);
+  border-radius: var(--radius-md);
 }

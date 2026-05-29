@@ -1,44 +1,54 @@
 <div class="battlefield-container" [ngClass]="{'active-turn': isPlayerTurn}">
   
   <div class="zone opponent-zone" [ngClass]="{'active-zone': !isPlayerTurn}" (click)="onOpponentDirectAttack()" [class.attackable]="isPlayerTurn && phase === 'BATTLE' && opponentField.length === 0">
-    <div class="zone-label" style="text-align: center; color: var(--danger); font-weight: bold; text-shadow: 0 0 5px var(--danger);">ZONA RIVAL</div>
+    <div class="zone-label text-danger">
+      <span class="icon">🤖</span> ZONA RIVAL
+    </div>
     <div class="opponent-field mt-2">
-      <div class="slot" *ngFor="let _ of [0,1,2,3,4]; let i = index">
-        <div class="card-on-field" *ngIf="opponentField[i]" 
-             [class.defending]="opponentField[i].isDefending" 
-             [class.targeted]="selectedTargetId === opponentField[i].instanceId || selectedAbilityTargetId === opponentField[i].instanceId"
-             (click)="$event.stopPropagation(); onOpponentCardClick(opponentField[i])" 
-             [class.targetable]="isPlayerTurn && phase === 'BATTLE' && !opponentField[i].hasAttacked"
-             style="transition: all 0.2s;">
-          <app-pokemon-card [card]="opponentField[i]" mode="battle"></app-pokemon-card>
-          <div class="status-indicators">
-            <span class="hp-badge">{{opponentField[i].hp}}/{{opponentField[i].maxHp}}</span>
-            <span class="def-badge" *ngIf="opponentField[i].isDefending">🛡️</span>
+      <div class="slot-container" *ngFor="let _ of [0,1,2,3,4]; let i = index">
+        <div class="slot-base"></div>
+        <div class="slot">
+          <div class="card-on-field" *ngIf="opponentField[i]" 
+               [class.defending]="opponentField[i].isDefending" 
+               [class.targeted]="selectedTargetId === opponentField[i].instanceId || selectedAbilityTargetId === opponentField[i].instanceId"
+               (click)="$event.stopPropagation(); onOpponentCardClick(opponentField[i])" 
+               [class.targetable]="isPlayerTurn && phase === 'BATTLE' && !opponentField[i].hasAttacked">
+            <app-pokemon-card [card]="opponentField[i]" mode="battle"></app-pokemon-card>
+            <div class="status-indicators">
+              <span class="hp-badge">{{opponentField[i].hp}}/{{opponentField[i].maxHp}}</span>
+              <span class="def-badge" *ngIf="opponentField[i].isDefending">🛡️</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="divider text-center my-2" style="position: relative; z-index: 10;">
-    <span class="badge" [ngClass]="phase === 'BATTLE' ? 'bg-danger' : 'bg-primary'" style="font-size: 1.2rem; padding: 0.5rem 2rem; box-shadow: 0 0 10px rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.4);">FASE ACTUAL: {{ phase }}</span>
+  <div class="divider text-center my-3" style="position: relative; z-index: 10;">
+    <span class="phase-badge badge" [ngClass]="phase === 'BATTLE' ? 'bg-danger battle-phase' : 'bg-primary main-phase'">
+      FASE ACTUAL: {{ phase }}
+    </span>
   </div>
 
   <div class="zone player-zone" [ngClass]="{'active-zone': isPlayerTurn}">
-    <div class="zone-label" style="text-align: center; color: var(--success); font-weight: bold; text-shadow: 0 0 5px var(--success);">TU ZONA</div>
+    <div class="zone-label text-success">
+      <span class="icon">👤</span> TU ZONA
+    </div>
     <div class="player-field mt-2">
-      <div class="slot" *ngFor="let _ of [0,1,2,3,4]; let i = index">
-        <div class="card-on-field" *ngIf="playerField[i]" 
-             [class.defending]="playerField[i].isDefending" 
-             [class.exhausted]="playerField[i].hasAttacked" 
-             [class.selected]="selectedAttackerId === playerField[i].instanceId || selectedDefenseCardId === playerField[i].instanceId || selectedAbilityCardId === playerField[i].instanceId"
-             (click)="onPlayerCardClick(playerField[i])"
-             style="transition: all 0.2s;">
-          <app-pokemon-card [card]="playerField[i]" mode="battle"></app-pokemon-card>
-          <div class="status-indicators">
-            <span class="hp-badge">{{playerField[i].hp}}/{{playerField[i].maxHp}}</span>
-            <span class="def-badge" *ngIf="playerField[i].isDefending">🛡️</span>
-            <span class="ability-badge" *ngIf="isPlayerTurn && phase === 'MAIN' && !playerField[i].hasAttacked && !playerField[i].isDefending && !playerField[i].hasUsedAbility" (click)="$event.stopPropagation(); onPlayerAbilityClick(playerField[i])" title="Usar Habilidad">💥</span>
+      <div class="slot-container" *ngFor="let _ of [0,1,2,3,4]; let i = index">
+        <div class="slot-base"></div>
+        <div class="slot">
+          <div class="card-on-field" *ngIf="playerField[i]" 
+               [class.defending]="playerField[i].isDefending" 
+               [class.exhausted]="playerField[i].hasAttacked" 
+               [class.selected]="selectedAttackerId === playerField[i].instanceId || selectedDefenseCardId === playerField[i].instanceId || selectedAbilityCardId === playerField[i].instanceId"
+               (click)="onPlayerCardClick(playerField[i])">
+            <app-pokemon-card [card]="playerField[i]" mode="battle"></app-pokemon-card>
+            <div class="status-indicators">
+              <span class="hp-badge">{{playerField[i].hp}}/{{playerField[i].maxHp}}</span>
+              <span class="def-badge" *ngIf="playerField[i].isDefending">🛡️</span>
+              <span class="ability-badge" *ngIf="isPlayerTurn && phase === 'MAIN' && !playerField[i].hasAttacked && !playerField[i].isDefending && !playerField[i].hasUsedAbility" (click)="$event.stopPropagation(); onPlayerAbilityClick(playerField[i])" title="Usar Habilidad">💥</span>
+            </div>
           </div>
         </div>
       </div>

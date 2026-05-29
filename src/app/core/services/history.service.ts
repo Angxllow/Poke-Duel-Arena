@@ -2,24 +2,6 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { SupabaseService } from './supabase.service';
 import { MatchResult } from '../models/match-result.model';
-import { GameState } from '../models/game-state.model';
-
-export interface LocalMatchResult {
-  id: string;
-  matchId: string;
-  mode: 'SOLO' | 'ONLINE';
-  winnerId: string | null;
-  loserId: string | null;
-  winnerName: string;
-  loserName: string;
-  resultReason: string;
-  turnsPlayed: number;
-  createdAt: string;
-  finalPlayerLife: number;
-  finalOpponentLife: number;
-  synced?: boolean;
-  finalState?: GameState;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +14,7 @@ export class HistoryService {
     private supabase: SupabaseService
   ) {}
 
-  async saveMatchResult(result: LocalMatchResult): Promise<void> {
+  async saveMatchResult(result: MatchResult): Promise<void> {
     await this.saveMatchResultLocal(result);
 
     try {
@@ -42,7 +24,7 @@ export class HistoryService {
     }
   }
 
-  private async saveMatchResultLocal(result: LocalMatchResult): Promise<void> {
+  private async saveMatchResultLocal(result: MatchResult): Promise<void> {
     const current = this.getLocalResultsSync();
 
     const exists = current.some(item => item.id === result.id || item.matchId === result.matchId);
@@ -54,7 +36,7 @@ export class HistoryService {
     localStorage.setItem(this.LOCAL_RESULTS_KEY, JSON.stringify(updated));
   }
 
-  private async saveMatchResultRemote(result: LocalMatchResult): Promise<void> {
+  private async saveMatchResultRemote(result: MatchResult): Promise<void> {
     const user = await this.authService.getCurrentUser();
 
     if (!user) {
@@ -107,7 +89,7 @@ export class HistoryService {
     await this.saveMatchResultLocal(result);
   }
 
-  getLocalResultsSync(): LocalMatchResult[] {
+  getLocalResultsSync(): MatchResult[] {
     try {
       const raw = localStorage.getItem(this.LOCAL_RESULTS_KEY);
 
@@ -128,7 +110,34 @@ export class HistoryService {
     }
   }
 
-  async getLocalResults(): Promise<LocalMatchResult[]> {
+  async getLocalResults(): Promise<MatchResult[]> {
     return this.getLocalResultsSync();
+  }
+
+  async getHistory(): Promise<MatchResult[]> {
+    let localResults = this.getLocalResultsSync();
+    let remoteResults: MatchResult[] = [];
+    
+    try {
+      const user = await this.authService.getCurrentUser();
+      if (user) {
+        remoteResults = await this.supabase.getMatchHistory(user.id);
+      }
+    } catch (error) {
+      console.warn('No se pudo obtener historial remoto', error);
+    }
+
+    // Merge and deduplicate by matchId or id
+    const merged = [...remoteResults];
+    
+    for (const local of localResults) {
+      const exists = merged.find(r => r.id === local.id || (r.matchId && r.matchId === local.matchId));
+      if (!exists) {
+        merged.push(local);
+      }
+    }
+
+    // Sort descending by date
+    return merged.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }
 }

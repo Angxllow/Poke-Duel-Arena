@@ -25,7 +25,9 @@ export class SupabaseService {
         loser_id: result.loserId === userId ? userId : null,
         mode: result.mode || 'SOLO',
         result_reason: result.resultReason,
-        turns_played: result.turnsPlayed
+        turns_played: result.turnsPlayed,
+        player_lp_final: result.finalPlayerLife ?? 0,
+        opponent_lp_final: result.finalOpponentLife ?? 0
       }]);
     } catch (error) {
       console.error('Failed to sync match to Supabase:', error);
@@ -56,6 +58,9 @@ export class SupabaseService {
         totalDamagePlayer2: 0,
         cardsUsedPlayer1: 0,
         cardsUsedPlayer2: 0,
+        finalPlayerLife: row.player_lp_final,
+        finalOpponentLife: row.opponent_lp_final,
+        synced: true,
         createdAt: row.created_at
       }));
     } catch (error) {
