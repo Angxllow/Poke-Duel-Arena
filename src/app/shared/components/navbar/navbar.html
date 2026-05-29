@@ -18,7 +18,9 @@
         <a routerLink="/profile" class="nav-link user-greeting" style="margin-right: 1rem; color: var(--accent-color);">
           {{ authService.currentProfile?.username || authService.currentUser?.email }}
         </a>
-        <button (click)="logout()" class="btn btn-outline btn-sm">Cerrar sesión</button>
+        <button (click)="logout()" class="btn btn-outline btn-sm" [disabled]="loggingOut">
+          {{ loggingOut ? 'Saliendo...' : 'Cerrar sesión' }}
+        </button>
       } @else {
         <a routerLink="/login" class="btn btn-outline btn-sm">Ingresar</a>
         <a routerLink="/register" class="btn btn-primary btn-sm">Registro</a>

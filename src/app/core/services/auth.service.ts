@@ -122,13 +122,25 @@ export class AuthService {
   }
 
   async logout(): Promise<void> {
-    const { error } = await this.supabase.client.auth.signOut();
+    try {
+      const { error } = await this.supabase.client.auth.signOut();
 
-    if (error) {
-      console.error('Error cerrando sesión:', error);
-      throw error;
+      if (error) {
+        console.error('Error cerrando sesión en Supabase:', error);
+      }
+    } catch (error) {
+      console.error('Error inesperado cerrando sesión:', error);
+    } finally {
+      this.clearLocalSession();
     }
+  }
 
+  private clearLocalSession(): void {
+    localStorage.removeItem('supabase.auth.token');
+    localStorage.removeItem('pokeduel_current_user');
+    localStorage.removeItem('pokeduel_profile');
+    // Keeping pokeduel_match_results, pokeduel_decks, pokeduel_cards as requested
+    
     this.currentUser = null;
     this.currentSession = null;
     this.currentProfile = null;

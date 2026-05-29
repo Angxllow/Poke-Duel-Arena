@@ -10,10 +10,21 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './navbar.css'
 })
 export class Navbar {
+  loggingOut = false;
+
   constructor(public authService: AuthService, private router: Router) {}
 
   async logout(): Promise<void> {
-    await this.authService.logout();
-    await this.router.navigate(['/login']);
+    if (this.loggingOut) return;
+    this.loggingOut = true;
+
+    try {
+      await this.authService.logout();
+      await this.router.navigate(['/login']);
+    } catch (error) {
+      console.error('Error cerrando sesión desde navbar:', error);
+    } finally {
+      this.loggingOut = false;
+    }
   }
 }
